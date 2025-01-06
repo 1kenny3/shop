@@ -20,29 +20,80 @@ import aiohttp
 from aiohttp import web
 import logging
 
+# Настраиваем логирование
+logging.basicConfig(level=logging.INFO)
+
 # Данные для работы магазина
-CITIES = ["Москва", "Санкт-Петербург", "Казань"]
+CITIES = [
+    "🏢Ноябрьск", "🏢Нижневартовск", "🏢Ханты-Мансийск", "🏢Когалым", "🏢Губкинский", "🏢Лабытнанги",
+    "🏢Салехард", "🏢Советский", "🏢Югорск", "🏢Новый Уренгой", "🏢Муравленко", "🏢Излучинск",
+    "🏢Коротчаево", "🏢Стрежевой", "🏢Тарко-Сале", "🏢Мегион", "🏢Урай", "🏢Вынгапуровский",
+    "🏢Пангоды", "🏢Надым", "🏢Нягань", "🏢Радужный", "🏢Старый Уренгой", "🏢Междуреченский",
+    "🏢Пурпе", "🏢Пуровск", "🏢Покачи", "🏢Белоярский", "🏢Лангепас", "🏢Талинка"
+]
 DISTRICTS = {
-    "Москва": ["Центральный", "Южный", "Северный"],
-    "Санкт-Петербург": ["Центральный", "Васильевский", "Петроградский"],
-    "Казань": ["Вахитовский", "Советский", "Приволжский"]
+    "🏢Ноябрьск": ["🌆Город🌆"],
+    "🏢Нижневартовск": ["🌆Город🌆"],
+    "🏢Ханты-Мансийск": ["🌆Город🌆"],
+    "🏢Когалым": ["🌆Город🌆"],
+    "🏢Губкинский": ["🌆Город🌆"],
+    "🏢Лабытнанги": ["🌆Город🌆"],
+    "🏢Салехард": ["🌆Город🌆"],
+    "🏢Советский": ["🌆Город🌆"],
+    "🏢Югорск": ["🌆Город🌆"],
+    "🏢Новый Уренгой": ["🌆Город🌆"],
+    "🏢Муравленко": ["🌆Город🌆"],
+    "🏢Излучинск": ["🌆Город🌆"],
+    "🏢Коротчаево": ["🌆Город🌆"],
+    "🏢Стрежевой": ["🌆Город🌆"],
+    "🏢Тарко-Сале": ["🌆Город🌆"],
+    "🏢Мегион": ["🌆Город🌆"],
+    "🏢Урай": ["🌆Город🌆"],
+    "🏢Вынгапуровский": ["🌆Город🌆"],
+    "🏢Пангоды": ["🌆Город🌆"],
+    "🏢Надым": ["🌆Город🌆"],
+    "🏢Нягань": ["🌆Город🌆"],
+    "🏢Радужный": ["🌆Город🌆"],
+    "🏢Старый Уренгой": ["🌆Город🌆"],
+    "🏢Междуреченский": ["🌆Город🌆"],
+    "🏢Пурпе": ["🌆Город🌆"],
+    "🏢Пуровск": ["🌆Город🌆"],
+    "🏢Покачи": ["🌆Город🌆"],
+    "🏢Белоярский": ["🌆Город🌆"],
+    "🏢Лангепас": ["🌆Город🌆"],
+    "🏢Талинка": ["🌆Город🌆"]
 }
 PICKUP_POINTS = {
-    "Москва": {
-        "Центральный": ["ул. Тверская, 1", "Пушкинская площадь, 2", "ул. Арбат, 15"],
-        "Южный": ["Варшавское шоссе, 26", "Каширское шоссе, 10", "ул. Чертановская, 5"],
-        "Северный": ["Ленинградский пр., 20", "ул. Дубнинская, 7", "Дмитровское шоссе, 12"]
-    },
-    "Санкт-Петербург": {
-        "Центральный": ["Невский пр., 1", "ул. Садовая, 5", "Литейный пр., 10"],
-        "Васильевский": ["6-я линия В.О., 3", "Большой пр. В.О., 8", "Малый пр. В.О., 15"],
-        "Петроградский": ["Большой пр. П.С., 18", "Каменноостровский пр., 25", "ул. Куйбышева, 30"]
-    },
-    "Казань": {
-        "Вахитовский": ["ул. Баумана, 12", "ул. Кремлевская, 5", "ул. Пушкина, 8"],
-        "Советский": ["ул. Гвардейская, 20", "пр. Победы, 15", "ул. Космонавтов, 10"],
-        "Приволжский": ["ул. Авангардная, 7", "пр. Ямашева, 30", "ул. Фучика, 15"]
-    }
+    "🏢Ноябрьск": {"🌆Город🌆": ["тайник"]},
+    "🏢Нижневартовск": {"🌆Город🌆": ["тайник"]},
+    "🏢Ханты-Мансийск": {"🌆Город🌆": ["тайник"]},
+    "🏢Когалым": {"🌆Город🌆": ["тайник"]},
+    "🏢Губкинский": {"🌆Город🌆": ["тайник"]},
+    "🏢Лабытнанги": {"🌆Город🌆": ["тайник"]},
+    "🏢Салехард": {"🌆Город🌆": ["тайник"]},
+    "🏢Советский": {"🌆Город🌆": ["тайник"]},
+    "🏢Югорск": {"🌆Город🌆": ["тайник"]},
+    "🏢Новый Уренгой": {"🌆Город🌆": ["тайник"]},
+    "🏢Муравленко": {"🌆Город🌆": ["тайник"]},
+    "🏢Излучинск": {"🌆Город🌆": ["тайник"]},
+    "🏢Коротчаево": {"🌆Город🌆": ["тайник"]},
+    "🏢Стрежевой": {"🌆Город🌆": ["тайник"]},
+    "🏢Тарко-Сале": {"🌆Город🌆": ["тайник"]},
+    "🏢Мегион": {"🌆Город🌆": ["тайник"]},
+    "🏢Урай": {"🌆Город🌆": ["тайник"]},
+    "🏢Вынгапуровский": {"🌆Город🌆": ["тайник"]},
+    "🏢Пангоды": {"🌆Город🌆": ["тайник"]},
+    "🏢Надым": {"🌆Город🌆": ["тайник"]},
+    "🏢Нягань": {"🌆Город🌆": ["тайник"]},
+    "🏢Радужный": {"🌆Город🌆": ["тайник"]},
+    "🏢Старый Уренгой": {"🌆Город🌆": ["тайник"]},
+    "🏢Междуреченский": {"🌆Город🌆": ["тайник"]},
+    "🏢Пурпе": {"🌆Город🌆": ["тайник"]},
+    "🏢Пуровск": {"🌆Город🌆": ["тайник"]},
+    "🏢Покачи": {"🌆Город🌆": ["тайник"]},
+    "🏢Белоярский": {"🌆Город🌆": ["тайник"]},
+    "🏢Лангепас": {"🌆Город🌆": ["тайник"]},
+    "🏢Талинка": {"🌆Город🌆": ["тайник"]}
 }
 PAYMENT_METHODS = ["VISA/MasterCard", "МИР"]
 
@@ -65,50 +116,70 @@ class OrderStates(StatesGroup):
 
 class AdminStates(StatesGroup):
     waiting_for_name = State()
-    waiting_for_description = State()
     waiting_for_price = State()
     waiting_for_city = State()
     waiting_for_district = State()
     waiting_for_pickup = State()
+    # Новые состояния для редактирования
+    edit_product = State()
+    edit_name = State()
+    edit_price = State()
+    edit_city = State()
+    edit_district = State()
+    edit_pickup = State()
 
 # Добавим новое состояние для создания бота
 class CreateBotState(StatesGroup):
     waiting_for_token = State()
 
-# Клавиатуры
-def get_main_keyboard():
-    keyboard = InlineKeyboardMarkup(row_width=2)
-    keyboard.add(
-        InlineKeyboardButton("🛍 Изменить город", callback_data="change_city")
-    )
+# Функция для создания клавиатуры с городами
+def get_city_keyboard():
+    keyboard = InlineKeyboardMarkup(row_width=2)  # Города по два в строке
+    buttons = [InlineKeyboardButton(city, callback_data=f"city_{city}") for city in CITIES]
+    keyboard.add(*buttons)
+    return keyboard
+
+# Функция для создания клавиатуры с городами при добавлении товара
+def get_add_city_keyboard():
+    keyboard = InlineKeyboardMarkup(row_width=2)  # Города по два в строке
+    buttons = [InlineKeyboardButton(city, callback_data=f"addcity_{city}") for city in CITIES]
+    keyboard.add(*buttons)
     return keyboard
 
 # Обработчики команд
-@dp.message_handler(commands=['start'])
-async def cmd_start(message: types.Message):
+@dp.message_handler(commands=['start'], state='*')
+async def cmd_start(message: types.Message, state: FSMContext):
+    await state.finish()  # Завершаем текущее состояние, если оно есть
     db.add_user(message.from_user.id, message.from_user.username)
     
-    # Создаем клавиатуру с городами и дополнительными кнопками
-    keyboard = InlineKeyboardMarkup(row_width=2)
+    # Создаем клавиатуру с городами
+    keyboard = get_city_keyboard()
     
-    # Сначала добавляем города
-    for city in CITIES:
-        keyboard.add(InlineKeyboardButton(city, callback_data=f"city_{city}"))
+    # Добавляем дополнительные кнопки по одной в строке
+    keyboard.add(InlineKeyboardButton("Баланс (0 руб.)", callback_data="balance"))
+    keyboard.add(InlineKeyboardButton("Последний заказ", callback_data="orders"))
+    keyboard.add(InlineKeyboardButton("😎Оператор продаж😎", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("💭Курилка💭", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("🧔🏻‍♂️Саппорт🧔🏻‍♂️", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("✏️Отзывы📝", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("💰Работа💰", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("📝Жалобы и редложения📝", callback_data="help"))
     
-    # Добавляем дополнительные кнопки в одну строку
-    keyboard.row(
-        InlineKeyboardButton("💰 Баланс", callback_data="balance"),
-        InlineKeyboardButton("🛒 Мои заказы", callback_data="orders"),
-        InlineKeyboardButton("ℹ️ Помощь", callback_data="help")
-    )
     # Добавляем кнопку "Поделиться ботом"
-    keyboard.row(InlineKeyboardButton("🤖 Создать своего бота", callback_data="share_bot"))
+    keyboard.add(InlineKeyboardButton("🤖 Создать своего бота", callback_data="share_bot"))
     
-    await message.answer(
-        f"👋 Добро пожаловать в наш магазин, {message.from_user.first_name}!\n\n"
-        "🌆 Выберите ваш город:",
-        reply_markup=keyboard
+    welcome_message = (
+        "😎😎МАГАЗИН😎😎\n"
+        "🥷АЛИБАБА И 40 КЛАДОВ 🥷\n"
+        "Оператор авто-продаж🤖 Приветствует тебя.\n"
+        "🛑АКЦИЯ  3+1🛑\n"
+        "ТЕПЕРЬ НЕ ТОЛЬКО ЧЕРЕЗ ОПЕРАТОРА, НО И В БОТЕ\n"
+        "Совершите 3 покупки через ОПЕРАТОРА или в БОТЕ за 12 часов и получите в ПОДАРОК 4 адрес "
+        "(☝️Бонус выдается наименьшая позиция ваших покупок ☝️)"
     )
+    
+    await message.answer(welcome_message)
+    await message.answer("🌆 Выберите ваш город:", reply_markup=keyboard)
 
 @dp.callback_query_handler(text="catalog")
 async def show_catalog(callback: types.CallbackQuery):
@@ -122,22 +193,28 @@ async def choose_city(callback: types.CallbackQuery, state: FSMContext):
     city = callback.data.split('_')[1]
     await state.update_data(city=city)
     
+    # Добавим отладочное сообщение
+    logging.info(f"Пользователь выбрал город: {city}")
+    
     products = db.get_all_products(city)
+    
+    # Добавим отладочное сообщение для проверки полученных товаров
+    logging.info(f"Товары для города {city}: {products}")
+    
     if not products:
         await callback.message.answer(
             f"😕 В каталоге нет товаров для города {city}",
-            reply_markup=get_main_keyboard()
+            reply_markup=get_city_keyboard()
         )
         return
     
     keyboard = InlineKeyboardMarkup(row_width=2)
     for product in products:
         keyboard.add(InlineKeyboardButton(f"{product[1]} - {product[3]}₽", 
-                                        callback_data=f"product_{product[0]}"))
+                                          callback_data=f"product_{product[0]}"))
     
-    # Показываем только товары с кнопкой изменения города
     await callback.message.answer(
-        "🛍 Доступные товары:", 
+        "💊Какой продукт хотели бы приобрести?💎", 
         reply_markup=keyboard
     )
     
@@ -156,7 +233,7 @@ async def choose_product(callback: types.CallbackQuery, state: FSMContext):
     for district in DISTRICTS[city]:
         keyboard.add(InlineKeyboardButton(district, callback_data=f"district_{district}"))
     
-    await callback.message.answer("🏘 Выберите район:", reply_markup=keyboard)
+    await callback.message.answer("🏙Выберите район🏙", reply_markup=keyboard)
     await OrderStates.waiting_for_district.set()
 
 @dp.callback_query_handler(text_startswith="district_", state=OrderStates.waiting_for_district)
@@ -172,7 +249,7 @@ async def choose_district(callback: types.CallbackQuery, state: FSMContext):
     for pickup in PICKUP_POINTS[city][district]:
         keyboard.add(InlineKeyboardButton(pickup, callback_data=f"pickup_{pickup}"))
     
-    await callback.message.answer("📍 Выберите пункт выдачи:", reply_markup=keyboard)
+    await callback.message.answer("Выберите тип", reply_markup=keyboard)
     await OrderStates.waiting_for_pickup.set()
 
 # Функция для генерации уникального ID заказа
@@ -193,20 +270,19 @@ async def choose_pickup(callback: types.CallbackQuery, state: FSMContext):
     order_id = generate_order_id()
     await state.update_data(order_id=order_id)
     
-    keyboard = InlineKeyboardMarkup(row_width=2)
+    keyboard = InlineKeyboardMarkup(row_width=1)
     keyboard.add(
-        InlineKeyboardButton("💳 Оплатить", callback_data="pay"),
-        InlineKeyboardButton("❌ Отменить", callback_data="cancel")
+        InlineKeyboardButton("Оплатить", callback_data="pay"),
+        InlineKeyboardButton("Отменить", callback_data="cancel")
     )
     
     await callback.message.answer(
-        f"📋 Подтвердите заказ:\n\n"
-        f"🌆 ID заказа: #{order_id}\n"
-        f"🌆 Город: {data['city']}\n"
-        f"🏘 Район: {data['district']}\n"
-        f"📍 Пункт выдачи: {pickup}\n"
-        f"🛍 Товар: {data['product_name']}\n"
-        f"💰 Цена: {data['price']}₽",
+        f"Идентификатор вашей покупки: № {order_id}\n"
+        f"Сумма к оплате: {data['price']}руб.\n"
+        f"Местоположение: {data['city']}\n"
+        f"Локация/Ближайшая станция: {data['district']}\n\n"
+        "Пожалуйста, перейдите к оплате, нажав кнопку ОПЛАТИТЬ.\n"
+        "Обратите внимание: после начала процесса оплаты у вас будет 30 минут для её завершения.",
         reply_markup=keyboard
     )
     await OrderStates.waiting_for_payment.set()
@@ -216,20 +292,20 @@ async def cancel_order(callback: types.CallbackQuery, state: FSMContext):
     await state.finish()
     
     # Создаем клавиатуру как в команде /start
-    keyboard = InlineKeyboardMarkup(row_width=2)
-    
-    # Добавляем города
-    for city in CITIES:
-        keyboard.add(InlineKeyboardButton(city, callback_data=f"city_{city}"))
+    keyboard = get_city_keyboard()
     
     # Добавляем дополнительные кнопки
-    keyboard.row(
-        InlineKeyboardButton("💰 Баланс", callback_data="balance"),
-        InlineKeyboardButton("🛒 Мои заказы", callback_data="orders"),
-        InlineKeyboardButton("ℹ️ Помощь", callback_data="help")
-    )
+    keyboard.add(InlineKeyboardButton("Баланс (0 руб.)", callback_data="balance"))
+    keyboard.add(InlineKeyboardButton("Последний заказ", callback_data="orders"))
+    keyboard.add(InlineKeyboardButton("😎Оператор продаж😎", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("💭Курилка💭", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("🧔🏻‍♂️Саппорт🧔🏻‍♂️", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("✏️Отзывы📝", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("💰Работа💰", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("📝Жалобы и редложения📝", callback_data="help"))
+    
     # Добавляем кнопку создания бота
-    keyboard.row(InlineKeyboardButton("🤖 Создать своего бота", callback_data="share_bot"))
+    keyboard.add(InlineKeyboardButton("🤖 Создать своего бота", callback_data="share_bot"))
     
     await callback.message.answer(
         f"❌ Заказ отменен\n\n"
@@ -244,7 +320,7 @@ async def choose_payment(callback: types.CallbackQuery, state: FSMContext):
     for method in PAYMENT_METHODS:
         keyboard.add(InlineKeyboardButton(method, callback_data=f"payment_{method}"))
     
-    await callback.message.answer("💳 Выберите способ оплаты:", reply_markup=keyboard)
+    await callback.message.answer(f"💳 Выберите способ оплаты:", reply_markup=keyboard)
     await OrderStates.waiting_for_payment.set()
 
 @dp.callback_query_handler(text_startswith="payment_", state=OrderStates.waiting_for_payment)
@@ -256,10 +332,31 @@ async def process_payment(callback: types.CallbackQuery, state: FSMContext):
     db.add_order(data['order_id'], callback.from_user.id, data['product_id'])
     
     await callback.message.answer(
-        f"💰 К оплате: {data['price']}₽\n\n"
-        f"🆔 ID заказа: #{data['order_id']}\n"
-        f"🆔 Способ оплаты: {payment_method}\n"
-        f"⚠️ Это демо-версия бота, оплата не производится"
+        f"✅ ВЫДАННЫЕ РЕКВИЗИТЫ ДЕЙСТВУЮТ 30 МИНУТ\n"
+        f"✅ ВЫ ПОТеряете деньги, если оплатите позже\n"
+        f"✅ Переводите точную сумму. Неверная сумма не будет зачислена.\n"
+        f"✅ Оплата должна проходить одним платежом.\n"
+        f"✅ Проблемы с оплатой? Перейдите по ссылке: [doctor](https://example.com)\n"
+        f"Предоставьте чек об оплате и ID: {data['order_id']}\n"
+        f"✅ С проблемной заявкой обращайтесь не позднее 24 часов с момента оплаты.\n\n",
+        parse_mode='Markdown'
+    )
+
+    # Добавляем новое сообщение с деталями оплаты
+    await callback.message.answer(
+        f"Номер оплаты № {data['order_id']}. Заплатите {data['price']} рублей.\n"
+        "Важно пополнить ровную сумму.\n"
+        "на карту 2200154595790709\n"
+        "‼️ у вас есть 30 мин на оплату, после чего платёж не будет принят\n"
+        "‼️ ПЕРЕВЁЛ НЕТОЧНУЮ СУММУ - ОПЛАТИЛ ЧУЖОЙ ЗАКАЗ!"
+    )
+
+    # Добавляем сообщение о действиях при задержке выдачи средств
+    keyboard = InlineKeyboardMarkup()
+    keyboard.add(InlineKeyboardButton("Проблема с оплатой", callback_data="payment_issue"))
+    await callback.message.answer(
+        "Если в течении часа средства не выдались автоматически, то нажмите на кнопку - 'Проблема с оплатой'.",
+        reply_markup=keyboard
     )
     
     await state.finish()
@@ -285,18 +382,22 @@ async def show_help(callback: types.CallbackQuery):
         "По всем вопросам обращайтесь к администратору: @admin"
     )
 
-@dp.message_handler(commands=['admin'])
-async def admin_panel(message: types.Message):
+@dp.message_handler(commands=['admin'], state='*')
+async def admin_panel(message: types.Message, state: FSMContext):
     if message.from_user.id != config.ADMIN_ID:
         await message.answer("❌ У вас нет доступа к панели администратора!")
         return
     
+    await state.finish()  # Завершаем текущее состояние, если оно есть
+    
     keyboard = InlineKeyboardMarkup(row_width=2)
     keyboard.add(
         InlineKeyboardButton("➕ Добавить товар", callback_data="add_product"),
+        InlineKeyboardButton("✏️ Редактировать товар", callback_data="edit_product"),
         InlineKeyboardButton("📊 Статистика", callback_data="admin_stats"),
         InlineKeyboardButton("🗑 Удалить товар", callback_data="delete_product"),
-        InlineKeyboardButton("📢 Рассылка", callback_data="broadcast")
+        InlineKeyboardButton("📢 Рассылка", callback_data="broadcast"),
+        InlineKeyboardButton("📦 Все товары", callback_data="show_all_products")
     )
     await message.answer("👨‍💼 Панель администратора:", reply_markup=keyboard)
 
@@ -316,16 +417,6 @@ async def add_product_name(message: types.Message, state: FSMContext):
         return
     
     await state.update_data(name=message.text)
-    await AdminStates.waiting_for_description.set()
-    await message.answer("📝 Введите описание товара:")
-
-@dp.message_handler(state=AdminStates.waiting_for_description)
-async def add_product_description(message: types.Message, state: FSMContext):
-    if message.from_user.id != config.ADMIN_ID:
-        await state.finish()
-        return
-    
-    await state.update_data(description=message.text)
     await AdminStates.waiting_for_price.set()
     await message.answer("💰 Введите цену товара (только число):")
 
@@ -340,22 +431,16 @@ async def add_product_price(message: types.Message, state: FSMContext):
         await state.update_data(price=price)
         
         # Создаем клавиатуру с городами
-        keyboard = InlineKeyboardMarkup(row_width=2)
-        for city in CITIES:
-            keyboard.add(InlineKeyboardButton(city, callback_data=f"addcity_{city}"))
+        keyboard = get_add_city_keyboard()
         
         await AdminStates.waiting_for_city.set()
         await message.answer("🌆 Выберите город для товара:", reply_markup=keyboard)
     except ValueError:
         await message.answer("❌ Пожалуйста, введите корректную цену (только число)!")
 
-# Добавляем новый обработчик для выбора города
+# Обработчик для выбора города при добавлении товара
 @dp.callback_query_handler(text_startswith="addcity_", state=AdminStates.waiting_for_city)
 async def add_product_city(callback: types.CallbackQuery, state: FSMContext):
-    if callback.from_user.id != config.ADMIN_ID:
-        await state.finish()
-        return
-    
     city = callback.data.split('_')[1]
     await state.update_data(city=city)
     
@@ -364,70 +449,62 @@ async def add_product_city(callback: types.CallbackQuery, state: FSMContext):
     for district in DISTRICTS[city]:
         keyboard.add(InlineKeyboardButton(district, callback_data=f"adddistrict_{district}"))
     
+    await callback.message.answer("🏙Выберите район🏙", reply_markup=keyboard)
     await AdminStates.waiting_for_district.set()
-    await callback.message.answer("🏘 Выберите район:", reply_markup=keyboard)
 
 # Добавим новый обработчик для выбора района
 @dp.callback_query_handler(text_startswith="adddistrict_", state=AdminStates.waiting_for_district)
 async def add_product_district(callback: types.CallbackQuery, state: FSMContext):
-    if callback.from_user.id != config.ADMIN_ID:
-        await state.finish()
-        return
-    
     district = callback.data.split('_')[1]
     await state.update_data(district=district)
     
-    # Получаем город и состояния
     data = await state.get_data()
     city = data['city']
     
-    # Создаем клавиатуру с пунктами выдачи для выбранного города и района
     keyboard = InlineKeyboardMarkup(row_width=1)
     for pickup in PICKUP_POINTS[city][district]:
         keyboard.add(InlineKeyboardButton(pickup, callback_data=f"addpickup_{pickup}"))
     
+    await callback.message.answer("Выберите тип", reply_markup=keyboard)
     await AdminStates.waiting_for_pickup.set()
-    await callback.message.answer("📍 Выберите пункт выдачи:", reply_markup=keyboard)
 
 # Добавим обработчик для пункта выдачи
 @dp.callback_query_handler(text_startswith="addpickup_", state=AdminStates.waiting_for_pickup)
 async def add_product_pickup(callback: types.CallbackQuery, state: FSMContext):
-    if callback.from_user.id != config.ADMIN_ID:
-        await state.finish()
-        return
-    
     pickup = callback.data.split('_')[1]
+    await state.update_data(pickup=pickup)
+    
     data = await state.get_data()
-    
-    # Добавляем товар в базу данных
-    db.add_product(data['name'], data['description'], data['price'], 
-                  data['city'], data['district'], pickup)
-    await state.finish()
-    
+    # Добавляем описание товара, которое ранее отсутствовало
+    description = "Описание не указано"  # Здесь можно добавить логику для получения описания, если оно есть
+    db.add_product(data['name'], description, data['price'], data['city'], data['district'], data['pickup'])
     await callback.message.answer(
-        "✅ Товар успешно добавлен в каталог!\n\n"
-        f"📦 Товар: {data['name']}\n"
+        f"✅ Товар успешно добавлен:\n"
+        f"📦 Название: {data['name']}\n"
         f"💰 Цена: {data['price']}₽\n"
         f"🌆 Город: {data['city']}\n"
         f"🏘 Район: {data['district']}\n"
         f"📍 Пункт выдачи: {pickup}"
     )
+    await state.finish()
 
 # Добавим обработчик для кнопки "Изменить город"
 @dp.callback_query_handler(text="change_city")
 async def change_city(callback: types.CallbackQuery):
-    keyboard = InlineKeyboardMarkup(row_width=2)
+    keyboard = get_city_keyboard()
     
-    # Сначала добавляем города
-    for city in CITIES:
-        keyboard.add(InlineKeyboardButton(city, callback_data=f"city_{city}"))
+    # Добавляем дополнительные кнопки по одной в строке
+    keyboard.add(InlineKeyboardButton("Баланс (0 руб.)", callback_data="balance"))
+    keyboard.add(InlineKeyboardButton("Последний заказ", callback_data="orders"))
+    keyboard.add(InlineKeyboardButton("😎Оператор продаж😎", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("💭Курилка💭", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("🧔🏻‍♂️Саппорт🧔🏻‍♂️", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("✏️Отзывы📝", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("💰Работа💰", callback_data="help"))
+    keyboard.add(InlineKeyboardButton("📝Жалобы и редложения📝", callback_data="help"))
     
-    # Добавляем дополнительные кнопки в одну строку
-    keyboard.row(
-        InlineKeyboardButton("💰 Баланс", callback_data="balance"),
-        InlineKeyboardButton("🛒 Мои заказы", callback_data="orders"),
-        InlineKeyboardButton("ℹ️ Помощь", callback_data="help")
-    )
+    # Добавляем кнопку "Поделиться ботом"
+    keyboard.add(InlineKeyboardButton("🤖 Создать своего бота", callback_data="share_bot"))
     
     await callback.message.answer("🌆 Выберите город:", reply_markup=keyboard)
 
@@ -571,7 +648,7 @@ WEBHOOK_PORT = 8443  # Порт для webhook
 # Добавим функцию для регистрации всех обработчиков
 def register_all_handlers(dp, bot):
     # Регистрируем все обработчики команд
-    dp.register_message_handler(cmd_start, commands=['start'])
+    dp.register_message_handler(cmd_start, commands=['start'], state='*')
     dp.register_callback_query_handler(show_catalog, text="catalog")
     dp.register_callback_query_handler(choose_city, text_startswith="city_")
     dp.register_callback_query_handler(choose_product, text_startswith="product_", state=OrderStates.waiting_for_product)
@@ -584,7 +661,7 @@ def register_all_handlers(dp, bot):
     dp.register_callback_query_handler(show_help, text="help")
     dp.register_callback_query_handler(change_city, text="change_city")
     dp.register_callback_query_handler(show_user_orders, text="orders")
-    dp.register_message_handler(admin_panel, commands=['admin'])
+    dp.register_message_handler(admin_panel, commands=['admin'], state='*')
     dp.register_callback_query_handler(add_product_start, text="add_product")
     dp.register_callback_query_handler(show_stats, text="admin_stats")
     dp.register_callback_query_handler(show_products_for_deletion, text="delete_product")
@@ -594,7 +671,6 @@ def register_all_handlers(dp, bot):
     
     # Регистрируем обработчики состояний
     dp.register_message_handler(add_product_name, state=AdminStates.waiting_for_name)
-    dp.register_message_handler(add_product_description, state=AdminStates.waiting_for_description)
     dp.register_message_handler(add_product_price, state=AdminStates.waiting_for_price)
     dp.register_callback_query_handler(add_product_city, text_startswith="addcity_", state=AdminStates.waiting_for_city)
     dp.register_callback_query_handler(add_product_district, text_startswith="adddistrict_", state=AdminStates.waiting_for_district)
@@ -702,6 +778,28 @@ async def show_my_bots(message: types.Message):
     
     await message.answer(text)
 
+# Обработчик для отображения всех товаров
+@dp.callback_query_handler(text="show_all_products")
+async def show_all_products(callback: types.CallbackQuery):
+    if callback.from_user.id != config.ADMIN_ID:
+        return
+    
+    products = db.get_all_products()
+    if not products:
+        await callback.message.answer("❌ В каталоге нет товаров")
+        return
+    
+    text = "📦 Все товары:\n\n"
+    for product in products:
+        text += (f"🆔 ID: {product[0]}\n"
+                 f"📦 Название: {product[1]}\n"
+                 f"💰 Цена: {product[3]}₽\n"
+                 f"🌆 Город: {product[4]}\n"
+                 f"🏘 Район: {product[5]}\n"
+                 f"📍 Пункт выдачи: {product[6]}\n\n")
+    
+    await callback.message.answer(text)
+
 # Изменим функцию main
 async def main():
     # Настраиваем логирование
@@ -712,6 +810,51 @@ async def main():
     
     # Запускаем основного бота
     await dp.start_polling()
+
+@dp.callback_query_handler(text="edit_product")
+async def start_edit_product(callback: types.CallbackQuery):
+    if callback.from_user.id != config.ADMIN_ID:
+        await callback.message.answer("❌ У вас нет доступа к этой функции!")
+        return
+    
+    products = db.get_all_products()
+    if not products:
+        await callback.message.answer("❌ В каталоге нет товаров")
+        return
+    
+    keyboard = InlineKeyboardMarkup(row_width=1)
+    for product in products:
+        keyboard.add(InlineKeyboardButton(
+            f"{product[1]} ({product[4]})", 
+            callback_data=f"select_product_{product[0]}"
+        ))
+    
+    await callback.message.answer("📝 Выберите товар для редактирования:", reply_markup=keyboard)
+
+@dp.callback_query_handler(text_startswith="select_product_")
+async def select_product(callback: types.CallbackQuery, state: FSMContext):
+    product_id = int(callback.data.split('_')[2])
+    product = db.get_product(product_id)
+    await state.update_data(product_id=product_id)
+    
+    keyboard = InlineKeyboardMarkup(row_width=1)
+    keyboard.add(
+        InlineKeyboardButton("Изменить название", callback_data="edit_name"),
+        InlineKeyboardButton("Изменить цену", callback_data="edit_price"),
+        InlineKeyboardButton("Изменить город", callback_data="edit_city"),
+        InlineKeyboardButton("Изменить район", callback_data="edit_district"),
+        InlineKeyboardButton("Изменить пункт выдачи", callback_data="edit_pickup"),
+        InlineKeyboardButton("Отмена", callback_data="cancel_edit")
+    )
+    
+    await callback.message.answer(
+        f"📝 Редактирование товара: {product[1]}\n"
+        f"💬 Цена: {product[3]}₽\n"
+        f"🌆 Город: {product[4]}\n"
+        f"🏘 Район: {product[5]}\n"
+        f"📍 Пункт выдачи: {product[6]}",
+        reply_markup=keyboard
+    )
 
 if __name__ == '__main__':
     asyncio.run(main())

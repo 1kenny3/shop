@@ -1,4 +1,5 @@
 import sqlite3
+import logging
 
 class Database:
     def __init__(self, db_file):
@@ -74,9 +75,26 @@ class Database:
         self.connection.commit()
     
     def get_all_products(self, city=None):
-        if city:
-            return self.cursor.execute('SELECT * FROM products WHERE city = ?', (city,)).fetchall()
-        return self.cursor.execute('SELECT * FROM products').fetchall()
+        # Добавим отладочное сообщение
+        logging.info(f"Запрос товаров для города: {city}")
+        
+        try:
+            if city:
+                products = self.cursor.execute(
+                    "SELECT * FROM products WHERE city = ?", (city,)
+                ).fetchall()
+            else:
+                products = self.cursor.execute(
+                    "SELECT * FROM products"
+                ).fetchall()
+            
+            # Добавим отладочное сообщение для проверки полученных данных
+            logging.info(f"Полученные товары: {products}")
+            
+            return products
+        except Exception as e:
+            logging.error(f"Ошибка при получении товаров: {e}")
+            return []
     
     def get_product(self, product_id):
         return self.cursor.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
